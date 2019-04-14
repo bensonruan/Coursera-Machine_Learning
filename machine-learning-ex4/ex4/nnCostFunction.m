@@ -62,23 +62,66 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+K = num_labels;
+
+Y = eye(K)(y,:);    % map yi to 1's and 0's, Y dimention: m * K
+
+% ======= Part 1: Feedforward and Cost function =======
+% compute output hx = a3 
+a1 = [ones(m, 1) X];            
+z2 = a1 * Theta1';
+a2 = sigmoid(z2);
+a2 = [ones(size(a2, 1), 1) a2];
+z3 = a2 * Theta2';
+a3 = sigmoid(z3);   % a3 dimention: m * K
+
+% compute cost J
+% both Y and a3 are m * K matrix, do element multiply, applu 2 sum to sum up all matrix elements
+J = (-1/m) * sum(sum(Y .* log(a3) + (1 - Y) .* log(1 - a3)));
+
+% ======= Part 3.1: Regularized Cost function =======
+% not sum on bia, which is the first column of Theta
+Theta1NoBias = Theta1(:, 2:end);
+Theta2NoBias = Theta2(:, 2:end);
+
+reg = (lambda/(2 * m)) * (sum(sum(Theta1NoBias .^ 2)) + sum(sum(Theta2NoBias .^ 2)));
+
+J = J + reg;
+
+% ======= Part 2: Backpropagation =======
+Delta1 = 0;
+Delta2 = 0;
+
+for t = 1:m
+  % Step 1. FP to compute a_3
+  a_1 = [1; X(t,:)'];            
+  z_2 = Theta1 * a_1;
+  a_2 = sigmoid(z_2);
+  a_2 = [1; a_2];
+  z_3 = Theta2 * a_2;
+  a_3 = sigmoid(z_3); 
+  
+  % Step 2. compute d_3
+  y_t = ([1:K]' == y(t));
+  d_3 = a_3 - y_t;
+  
+  % Step 3. compute d_2
+  d_2 = (Theta2NoBias' * d_3) .* sigmoidGradient(z_2);
+  
+  % Step 4. Accumulate Delta1 and Delta2
+  Delta1 = Delta1 + d_2 * a_1';
+  Delta2 = Delta2 + d_3 * a_2';
+  
+endfor
+
+% Step 5. compute gradient
+Theta1_grad = (1/m) * Delta1;
+Theta2_grad = (1/m) * Delta2;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+% ======= Part 3.2: Regularized Gradient =======
+Theta1_grad(:, 2:end) += (lambda/m) * Theta1NoBias;
+Theta2_grad(:, 2:end) += (lambda/m) * Theta2NoBias;
 
 % -------------------------------------------------------------
 
