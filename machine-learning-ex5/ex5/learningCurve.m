@@ -53,8 +53,17 @@ error_val   = zeros(m, 1);
 
 % ---------------------- Sample Solution ----------------------
 
-
-
+for i = 1:m
+  % train from 1?i dataset
+  Xtrain =  X(1:i, :);
+  ytrain = y(1:i);
+  theta = trainLinearReg(Xtrain, ytrain, lambda);
+  
+  % use cost function to get train error and validation error
+  % pass lambda = 0
+  error_train(i) = linearRegCostFunction(Xtrain, ytrain, theta, 0);
+  error_val(i) = linearRegCostFunction(Xval, yval, theta, 0);
+end
 
 
 

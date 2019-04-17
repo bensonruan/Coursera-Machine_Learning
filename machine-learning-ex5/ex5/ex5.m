@@ -218,3 +218,10 @@ end
 
 fprintf('Program paused. Press enter to continue.\n');
 pause;
+
+lambda = 3;
+theta = trainLinearReg(X_poly, y, lambda);
+error_test = linearRegCostFunction(X_poly_test, ytest, theta, 0);
+
+fprintf(['select bset lambda = 3, error_test : %f '...
+         '\n(this value should be about 3.8599)\n'], error_test);
