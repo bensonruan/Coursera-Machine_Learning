@@ -97,14 +97,13 @@ while ~isempty(email_contents)
     %       str2). It will return 1 only if the two strings are equivalent.
     %
 
-
-
-
-
-
-
-
-
+    %instead of loop through vocabList, use Octave ismember function 
+    %https://octave.sourceforge.io/octave/function/ismember.html 
+    
+    [exist, idx] = ismember(str, vocabList);
+    if exist 
+      word_indices(end+1) = idx;
+    endif
 
     % =============================================================
 
