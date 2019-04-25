@@ -26,12 +26,12 @@ centroids = zeros(K, n);
 % Note: You can use a for-loop over the centroids to compute this.
 %
 
-
-
-
-
-
-
+for k = 1:K
+  % filter X that assigned to the k centroid
+  Xk = X(find(idx == k),:);
+  Ck = size(Xk,1);
+  centroids(k,:) = (1/Ck) * sum(Xk);
+endfor
 
 % =============================================================
 
